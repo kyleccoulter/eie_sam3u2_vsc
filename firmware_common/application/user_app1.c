@@ -92,6 +92,11 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  LedOff(RED0), LedOff(GREEN0), LedOff(BLUE0);
+  LedOff(RED1), LedOff(GREEN1), LedOff(BLUE1);
+  LedOff(RED2), LedOff(GREEN2), LedOff(BLUE2);
+  LedOff(LCD_BL);
+  
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -140,7 +145,34 @@ State Machine Function Definitions
 /* What does this state do? */
 static void UserApp1SM_Idle(void)
 {
-     
+  static u16 u16Counter = U16_COUNTER_PERIOD_MS;
+  static u8 u8Counter = U8_COUNTER_PERIOD_MS;
+  u16Counter--;
+
+  if(u16Counter == 0){
+    u16Counter = U16_COUNTER_PERIOD_MS;
+    
+    u8Counter--;
+    if(u8Counter == 0){
+      u8Counter = U8_COUNTER_PERIOD_MS;
+    }
+    
+    LedOff(RED3), LedOff(GREEN2), LedOff(BLUE1), LedOff(BLUE0), LedOff(RED0);
+
+    if(u8Counter & 0x01)
+      LedOn(RED3);
+    
+    if(u8Counter & 0x02)
+      LedOn(GREEN2);
+    
+    if(u8Counter & 0x03)
+      LedOn(BLUE1);
+
+    if(u8Counter & 0x04){
+      LedOn(RED0);
+      LedOn(BLUE0);
+    }
+  }
 } /* end UserApp1SM_Idle() */
      
 
